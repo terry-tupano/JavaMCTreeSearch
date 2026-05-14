@@ -1,0 +1,4 @@
+{
+    "java.inlayHints.parameterNames.enabled": "none",
+    "java.debug.settings.onBuildFailureProceed": true
+}
