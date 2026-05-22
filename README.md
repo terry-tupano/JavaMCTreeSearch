@@ -8,7 +8,7 @@ This project is a Java implementation inspired by an existing Kotlin library fou
 
 
 ## Example Code
-MDP of TicTacToe
+### MDP of TicTacToe
 ```java
 package de.simone.tictactoe;
 
@@ -105,7 +105,7 @@ public class MPD extends MDP<Grid, Action> {
     }
 }
 ```
-And the Game
+### And the Game
 
 ``` java
 package de.simone.tictactoe;
@@ -235,9 +235,11 @@ public class TicTacToe {
 - mvn jetty:run
 
 
-## License
+## License & Author
 
-The library is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
+JavaMCTreeSearch is manteined by Terry Tupano.
+
+The library is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html). See LICENSE file.
 
 	Copyright 2026 Terry Tupano
 
