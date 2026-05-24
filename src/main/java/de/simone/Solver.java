@@ -35,9 +35,9 @@ import static java.lang.Math.sqrt;
  * convenience but can be overridden.
  *
  * @param <A>        the type that represents actions in the MDP
- * @param <NodeType> the type that represents nodes in the tree
+ * @param <N> the type that represents nodes in the tree
  */
-public abstract class Solver<A, NodeType extends Node<A, NodeType>> {
+public abstract class Solver<A, N extends Node<A, N>> {
 
     protected final boolean verbose;
     protected final double explorationConstant;
@@ -55,29 +55,29 @@ public abstract class Solver<A, NodeType extends Node<A, NodeType>> {
     /**
      * The root node of the tree.
      */
-    public abstract NodeType getRoot();
+    public abstract N getRoot();
 
-    public abstract void setRoot(NodeType root);
+    public abstract void setRoot(N root);
 
     /**
      * Returns a leaf node in the tree given a starting node.
      */
-    public abstract NodeType select(NodeType node);
+    public abstract N select(N node);
 
     /**
      * Creates and returns a new child node given a leaf node.
      */
-    public abstract NodeType expand(NodeType node);
+    public abstract N expand(N node);
 
     /**
      * Runs a simulation from the given leaf node and computes a score.
      */
-    public abstract double simulate(NodeType node);
+    public abstract double simulate(N node);
 
     /**
      * Propagates the reward for the given node to the root.
      */
-    public abstract void backpropagate(NodeType node, double reward);
+    public abstract void backpropagate(N node, double reward);
 
     /**
      * Runs a given number of iterations of MCTS.
@@ -100,7 +100,7 @@ public abstract class Solver<A, NodeType extends Node<A, NodeType>> {
      */
     public void runTreeSearchIteration() {
         // Selection
-        NodeType best = select(getRoot());
+        N best = select(getRoot());
 
         if (verbose) {
             traceln("Selected:");
@@ -108,7 +108,7 @@ public abstract class Solver<A, NodeType extends Node<A, NodeType>> {
         }
 
         // Expansion
-        NodeType expanded = expand(best);
+        N expanded = expand(best);
 
         if (verbose) {
             traceln("Expanding:");
@@ -129,7 +129,7 @@ public abstract class Solver<A, NodeType extends Node<A, NodeType>> {
     /**
      * Calculates the UCT score of a node.
      */
-    protected double calculateUCT(NodeType node) {
+    protected double calculateUCT(N node) {
         int parentN = (node.getParent() != null) ? node.getParent().getN() : node.getN();
 
         return calculateUCT(parentN, node.getN(), node.getReward(), explorationConstant);
@@ -147,12 +147,12 @@ public abstract class Solver<A, NodeType extends Node<A, NodeType>> {
      * number of visits.
      */
     public A extractOptimalAction() {
-        Collection<NodeType> children = getRoot().getChildren();
+        Collection<N> children = getRoot().getChildren();
 
-        NodeType bestChild = null;
+        N bestChild = null;
         int bestVisits = Integer.MIN_VALUE;
 
-        for (NodeType child : children) {
+        for (N child : children) {
             if (child.getN() > bestVisits) {
                 bestVisits = child.getN();
                 bestChild = child;
@@ -187,14 +187,14 @@ public abstract class Solver<A, NodeType extends Node<A, NodeType>> {
     /**
      * Formats a node into a string.
      */
-    protected String formatNode(NodeType node) {
+    protected String formatNode(N node) {
         return node.toString();
     }
 
     /**
      * Prints the path from root to the given node.
      */
-    public void displayNode(NodeType node) {
+    public void displayNode(N node) {
         if (node.getParent() != null) {
             displayNode(node.getParent());
         }
@@ -220,7 +220,7 @@ public abstract class Solver<A, NodeType extends Node<A, NodeType>> {
         displayTree(depthLimit, getRoot(), "");
     }
 
-    private void displayTree(int depthLimit, NodeType node, String indent) {
+    private void displayTree(int depthLimit, N node, String indent) {
         if (node == null) {
             return;
         }
@@ -239,13 +239,13 @@ public abstract class Solver<A, NodeType extends Node<A, NodeType>> {
 
         System.out.println(line);
 
-        Collection<NodeType> childrenCollection = node.getChildren();
+        Collection<N> childrenCollection = node.getChildren();
 
         if (childrenCollection.isEmpty()) {
             return;
         }
 
-        List<NodeType> children = new ArrayList<>(childrenCollection);
+        List<N> children = new ArrayList<>(childrenCollection);
 
         for (int i = 0; i < children.size() - 1; i++) {
             displayTree(depthLimit, children.get(i), generateIndent(indent) + " ├");
