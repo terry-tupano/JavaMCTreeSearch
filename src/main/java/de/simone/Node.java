@@ -31,11 +31,11 @@ import java.util.Collection;
  *
  * @param <A>        the type that represents the actions that can be taken
  *                   in the MDP
- * @param <SelfType> a convenience parameter to represent the type itself
+ * @param <SELF> a convenience parameter to represent the type itself
  */
-public abstract class Node<A, SelfType extends Node<A, SelfType>> {
+public abstract class Node<A, SELF extends Node<A, SELF>> {
 
-    private final SelfType parent;
+    private final SELF parent;
     private final A inducingAction;
     private final int depth;
 
@@ -60,7 +60,7 @@ public abstract class Node<A, SelfType extends Node<A, SelfType>> {
      * @param parent         the parent node
      * @param inducingAction the action that led to this node
      */
-    protected Node(SelfType parent, A inducingAction) {
+    protected Node(SELF parent, A inducingAction) {
         this.parent = parent;
         this.inducingAction = inducingAction;
         this.depth = (parent == null) ? 0 : parent.getDepth() + 1;
@@ -69,7 +69,7 @@ public abstract class Node<A, SelfType extends Node<A, SelfType>> {
     /**
      * Get the parent node.
      */
-    public SelfType getParent() {
+    public SELF getParent() {
         return parent;
     }
 
@@ -132,17 +132,17 @@ public abstract class Node<A, SelfType extends Node<A, SelfType>> {
     /**
      * Add a child to the current node.
      */
-    public abstract void addChild(SelfType child);
+    public abstract void addChild(SELF child);
 
     /**
      * Get all the children of the current node.
      */
-    public abstract Collection<SelfType> getChildren(A action);
+    public abstract Collection<SELF> getChildren(A action);
 
     /**
      * Convenience overload equivalent to Kotlin default parameter.
      */
-    public Collection<SelfType> getChildren() {
+    public Collection<SELF> getChildren() {
         return getChildren(null);
     }
 }
